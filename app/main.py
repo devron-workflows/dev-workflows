@@ -37,3 +37,21 @@ def db_check():
     except Exception as e:
         return {"ok": False, "error": str(e)}
 
+@app.get("/accounts")
+def list_accounts():
+    if not DATABASE_URL:
+        return []
+
+    with psycopg.connect(DATABASE_URL) as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                select id, name
+                from public.accounts
+                where active = true
+                order by name;
+                """
+            )
+            rows = cur.fetchall()
+
+    return [{"id": r[0], "name": r[1]} for r in rows]
