@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ account.name }} — Dev Workflows</title>
+
+    <style>
+      :root{
+        --bg:#0b1220;
+        --border:rgba(255,255,255,.12);
+        --text:#e5e7eb;
+        --muted:rgba(229,231,235,.65);
+        --accent:#38bdf8;
+        --accent2:#a78bfa;
+      }
+      *{ box-sizing:border-box; }
+      body{
+        margin:0;
+        padding:18px;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background:
+          radial-gradient(900px 500px at 20% 10%, rgba(56,189,248,.18), transparent),
+          radial-gradient(800px 450px at 85% 20%, rgba(167,139,250,.16), transparent),
+          var(--bg);
+        color: var(--text);
+      }
+      .wrap{ max-width:980px; margin:0 auto; }
+      .top{
+        display:flex;
+        justify-content:space-between;
+        align-items:baseline;
+        gap:12px;
+        flex-wrap:wrap;
+        margin-bottom:14px;
+      }
+      h2{ margin:0; font-size:22px; }
+      .back{
+        display:inline-block;
+        margin-bottom:6px;
+        text-decoration:none;
+        color:var(--accent);
+        font-weight:600;
+        font-size:14px;
+      }
+      .pill{
+        border:1px solid var(--border);
+        padding:6px 10px;
+        border-radius:999px;
+        background: rgba(15,23,42,.55);
+        color:var(--muted);
+        font-size:13px;
+      }
+      .card{
+        border:1px solid var(--border);
+        border-radius:18px;
+        background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+        box-shadow:0 20px 40px rgba(0,0,0,.4);
+        padding:16px;
+        margin-bottom:16px;
+      }
+      label{ display:block; margin:14px 0 8px; font-weight:650; }
+      input, textarea, select{
+        width:100%;
+        padding:12px 14px;
+        font-size:16px;
+        border-radius:12px;
+        border:1px solid var(--border);
+        background: rgba(15,23,42,.8);
+        color:var(--text);
+        outline:none;
+      }
+      textarea{ min-height:120px; }
+      textarea.big{ min-height:160px; }
+      button{
+        width:100%;
+        padding:13px 16px;
+        font-size:16px;
+        font-weight:800;
+        border-radius:14px;
+        border:1px solid rgba(56,189,248,.35);
+        background: linear-gradient(135deg, rgba(56,189,248,.95), rgba(167,139,250,.9));
+        color:#06101a;
+        cursor:pointer;
+        margin-top:12px;
+      }
+      table{
+        width:100%;
+        border-collapse:collapse;
+        margin-top:10px;
+      }
+      th, td{
+        text-align:left;
+        padding:10px 8px;
+        border-top:1px solid rgba(255,255,255,.08);
+        font-size:14px;
+      }
+      th{ color:var(--muted); font-weight:650; }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+
+      <div class="top">
+        <div>
+          <a class="back" href="/ui">← Back to accounts</a>
+          <h2>{{ account.name }}</h2>
+        </div>
+        <div class="pill">Week of {{ week_start }}</div>
+      </div>
+
+      <div class="card">
+        <h3>Weekly Plan</h3>
+
+        <form method="post" action="/ui/account/{{ account.id }}/plan">
+          <input type="hidden" name="week_start" value="{{ week_start }}" />
+
+          <label>Planning</label>
+          <textarea class="big" name="actions">{{ plan.actions or "" }}</textarea>
+
+          <label>Objectives</label>
+          <textarea name="objectives">{{ plan.objectives or "" }}</textarea>
+
+          <label>Objections</label>
+          <textarea name="objections">{{ plan.objections or "" }}</textarea>
+
+          <label>Follow-up / Recap</label>
+          <textarea name="recap">{{ plan.recap or "" }}</textarea>
+
+          <button type="submit">Save plan</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Buyer / Manager Info</h3>
+
+        <form method="post" action="/ui/account/{{ account.id }}/contact">
+          <input type="hidden" name="week_start" value="{{ week_start }}" />
+
+          <label>Name</label>
+          <input name="name" required />
+
+          <label>Role</label>
+          <select name="role">
+            <option value="buyer">Buyer</option>
+            <option value="manager">Manager</option>
+            <option value="owner">Owner</option>
+          </select>
+
+          <label>Phone</label>
+          <input name="phone" />
+
+          <label>Email</label>
+          <input name="email" />
+
+          <label>Notes</label>
+          <textarea name="notes"></textarea>
+
+          <button type="submit">Add contact</button>
+        </form>
+
+        {% if contacts|length > 0 %}
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Phone</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in contacts %}
+            <tr>
+              <td>{{ c.name }}</td>
+              <td>{{ c.role }}</td>
+              <td>{{ c.phone or "" }}</td>
+              <td>{{ c.email or "" }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% endif %}
+      </div>
+
+    </div>
+  </body>
+</html>
+

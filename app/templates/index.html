@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dev Workflows</title>
+
+    <style>
+      :root{
+        --bg:#0b1220;
+        --border:rgba(255,255,255,.12);
+        --text:#e5e7eb;
+        --muted:rgba(229,231,235,.65);
+        --accent:#38bdf8;
+        --accent2:#a78bfa;
+      }
+      *{ box-sizing:border-box; }
+      body{
+        margin:0;
+        padding:18px;
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background:
+          radial-gradient(900px 500px at 20% 10%, rgba(56,189,248,.18), transparent),
+          radial-gradient(800px 450px at 85% 20%, rgba(167,139,250,.16), transparent),
+          var(--bg);
+        color: var(--text);
+      }
+      .wrap{ max-width: 980px; margin: 0 auto; }
+      .card{
+        padding: 18px;
+        border-radius: 18px;
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.03));
+        box-shadow: 0 20px 40px rgba(0,0,0,.4);
+        margin-bottom: 14px;
+      }
+      h2{ margin:0 0 10px; font-size: 24px; }
+      .pill{
+        display:inline-block;
+        border:1px solid var(--border);
+        padding:8px 12px;
+        border-radius:999px;
+        background: rgba(15,23,42,.55);
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+      .grid{
+        display:grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      a.btn{
+        display:block;
+        text-decoration:none;
+        border: 1px solid rgba(56,189,248,.25);
+        background: rgba(15,23,42,.75);
+        color: var(--text);
+        padding: 14px 14px;
+        border-radius: 14px;
+        font-weight: 700;
+      }
+      a.btn:hover{
+        border-color: rgba(56,189,248,.6);
+        box-shadow: 0 0 0 4px rgba(56,189,248,.12);
+      }
+      .muted{
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 10px;
+      }
+      @media (max-width: 760px){
+        .grid{ grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <h2>Weekly Planner</h2>
+        <div class="pill">Week of {{ default_week_start }} (Monday start)</div>
+
+        <div class="grid">
+          {% for a in accounts %}
+            <a class="btn" href="/ui/account/{{ a.id }}?week_start={{ default_week_start }}">{{ a.name }}</a>
+          {% endfor %}
+        </div>
+
+        <div class="muted">Tap an account to open its plan page.</div>
+      </div>
+    </div>
+  </body>
+</html>
+
